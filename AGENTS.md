@@ -93,6 +93,10 @@ For GitHub issue work:
 9. Commit and push before ending any implementation chat.
 10. Prepare a focused PR tied to the source issue.
 
+Default issue delivery mode is `agent-only`.
+Use `co-op` only when Dev explicitly requests collaborative pair work.
+Keep `agent-only` and `co-op` mutually exclusive.
+
 The agent and Dev should use the same branch, worktree, issue comments, labels, and PR rules for every issue.
 
 ## Branch And PR Rules

@@ -1,6 +1,6 @@
 ---
 name: common-git-pr
-description: Prepare, update, review, or merge GitHub pull requests tied to source issues. Use when Codex is creating a PR, updating a PR body, responding to review comments, or finalizing an issue branch.
+description: Prepare, update, review, or merge GitHub pull requests tied to source issues. Use when an agent is creating a PR, updating a PR body, responding to review comments, or finalizing an issue branch.
 ---
 
 # Common Git PR
@@ -29,12 +29,12 @@ gh repo view --json nameWithOwner,url,defaultBranchRef
 For GitHub PR operations, use:
 
 ```bash
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr view <pr-number> --json number,title,body,state,url
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr comment <pr-number> --body "..."
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr create --title "..." --body-file <body-file>
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr view <pr-number> --json number,title,body,state,url
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr comment <pr-number> --body "..."
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr create --title "..." --body-file <body-file>
 ```
 
-Use `claudecode-coder` instead of `codex-coder` when the acting agent is ClaudeCode.
+Use `codex-coder` for Codex and `claudecode-coder` for ClaudeCode.
 
 Use `gh pr view`, `gh pr create`, `gh pr edit`, `gh pr comment`, `gh pr checks`, `gh pr review`, and `gh pr merge` through the wrapper for PR work.
 Use wrapped `gh api graphql` when thread-level review state, exact review comment ids, or timeline data are required.
@@ -82,10 +82,10 @@ Preferred commands:
 git -C worktrees/<branch> status --short
 git -C worktrees/<branch> branch --show-current
 git -C worktrees/<branch> push -u origin <branch>
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr view --json number,title,body,state,url,headRefName,baseRefName,reviewDecision,statusCheckRollup
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr create --draft --title "<type>(<scope>): <description> (#<issue-number>)" --body-file <body-file>
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr edit <pr-number> --body-file <body-file>
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr checks <pr-number>
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr view --json number,title,body,state,url,headRefName,baseRefName,reviewDecision,statusCheckRollup
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr create --draft --title "<type>(<scope>): <description> (#<issue-number>)" --body-file <body-file>
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr edit <pr-number> --body-file <body-file>
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr checks <pr-number>
 ```
 
 ## Review Comments
@@ -102,7 +102,7 @@ Prefer wrapped `gh api graphql` for unresolved review threads because plain `gh 
 
 ## Merge Mode
 
-Only merge when explicitly instructed by the maintainer or by a trusted OpenClaw mode that carries maintainer approval.
+Only merge when explicitly instructed by the maintainer or by a trusted project workflow that carries maintainer approval.
 
 Before merge:
 
@@ -114,7 +114,7 @@ Before merge:
 Preferred command:
 
 ```bash
-./.agents/scripts/with-github-app.sh codex-coder -- gh pr merge <pr-number> --squash --delete-branch
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh pr merge <pr-number> --squash --delete-branch
 ```
 
 After merge, clean up from the main repo:

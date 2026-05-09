@@ -1,6 +1,6 @@
 ---
 name: common-documentation-lookup
-description: Find and read the repository guidance needed before planning or editing. Use when Codex needs to understand project docs, AGENTS.md files, architecture notes, PRD material, or local conventions before acting.
+description: Find and read the repository guidance needed before planning or editing. Use when an agent needs to understand project docs, AGENTS.md files, architecture notes, PRD material, or local conventions before acting.
 ---
 
 # Common Documentation Lookup
@@ -26,7 +26,7 @@ Use this skill before planning or implementation when the task depends on reposi
 
 ## External Documentation
 
-When external package, framework, or API behavior matters, prefer Context7 if it is configured in Codex on the server.
+When external package, framework, or API behavior matters, prefer live documentation tooling available to the selected agent.
 If Context7 is not configured, use official documentation through the available approved tooling or report that server setup is missing when fresh external docs are required.
 
 Do not invent current library behavior from memory when version-sensitive docs are needed.
@@ -34,7 +34,7 @@ Do not invent current library behavior from memory when version-sensitive docs a
 Current server expectation:
 
 - `gh` should be used for GitHub issue and PR data.
-- Context7 is optional but recommended for external library documentation once configured as a Codex MCP server.
+- Context7 is optional but recommended for external library documentation when available to the selected agent.
 
 ## Output Expectations
 

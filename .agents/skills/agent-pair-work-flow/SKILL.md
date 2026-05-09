@@ -1,6 +1,6 @@
 ---
 name: agent-pair-work-flow
-description: Run the same issue-driven modes directly with Dev in chat, without OpenClaw as coordinator. Use when Dev is pairing with Codex or ClaudeCode on a local machine.
+description: Run issue-driven modes directly with Dev in chat. Use when Dev is pairing with Codex or ClaudeCode on a local machine.
 ---
 
 # Agent Pair Work Flow
@@ -32,7 +32,7 @@ If credentials are not present, it runs the command with the current authenticat
 
 ## Modes
 
-Pair-work mode uses the same modes as OpenClaw mode:
+Pair-work mode uses the standard issue modes:
 
 - `init`
 - `reinit`

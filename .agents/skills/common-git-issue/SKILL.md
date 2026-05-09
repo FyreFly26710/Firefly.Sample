@@ -1,6 +1,6 @@
 ---
 name: common-git-issue
-description: Handle GitHub issue-driven work. Use when Codex must read, refine, update, label, comment on, or execute against a GitHub issue as the source of truth.
+description: Handle GitHub issue-driven work. Use when an agent must read, refine, update, label, comment on, or execute against a GitHub issue as the source of truth.
 ---
 
 # Common Git Issue
@@ -29,12 +29,12 @@ gh repo view --json nameWithOwner,url,defaultBranchRef
 For GitHub issue operations, use:
 
 ```bash
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue view <issue-number> --json number,title,body,labels,state,author,comments,assignees,milestone,projectItems,url
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue comment <issue-number> --body "..."
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue edit <issue-number> --add-label codex
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue view <issue-number> --json number,title,body,labels,state,author,comments,assignees,milestone,projectItems,url
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue comment <issue-number> --body "..."
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue edit <issue-number> --add-label agent
 ```
 
-Use `claudecode-coder` instead of `codex-coder` when the acting agent is ClaudeCode.
+Use `codex-coder` for Codex and `claudecode-coder` for ClaudeCode.
 
 Use `gh issue view` and `gh issue comment` for issue reads and status writes through the wrapper.
 Use `gh issue edit` for labels and issue body updates.
@@ -52,15 +52,15 @@ The maintainer-owned source section is `Dev Requirement`.
 Developers may create an issue with only a title, or with a free-form body.
 During `init`, preserve any existing free-form body by moving it under `Dev Requirement`.
 After that, the developer should maintain only `Dev Requirement`.
-Codex may update derived sections, but must not rewrite `Dev Requirement` unless the maintainer explicitly asks.
+Agents may update derived sections, but must not rewrite `Dev Requirement` unless the maintainer explicitly asks.
 
 Every mode must start by fetching the full issue details and all issue comments, not only the latest comments.
 
 Recommended commands:
 
 ```bash
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue view <issue-number> --json number,title,body,labels,state,author,comments,assignees,milestone,projectItems,url
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue view <issue-number> --comments
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue view <issue-number> --json number,title,body,labels,state,author,comments,assignees,milestone,projectItems,url
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue view <issue-number> --comments
 ```
 
 If the task references linked PRs, closing references, timeline events, or exact comment ids that are not available through `gh issue view`, use wrapped `gh api graphql` to fetch the missing data.
@@ -113,7 +113,7 @@ Agent-maintained constraints, risks, dependencies, and explicit non-goals.
 Rules:
 
 - `Dev Requirement` is the source material from the developer.
-- `Description`, `Goal`, `Scope`, `Acceptance Criteria`, and `Constraints` are derived by Codex from the issue title, `Dev Requirement`, and all comments.
+- `Description`, `Goal`, `Scope`, `Acceptance Criteria`, and `Constraints` are derived by the agent from the issue title, `Dev Requirement`, and all comments.
 - `init` creates the structured body if it is missing.
 - `reinit` refreshes the derived sections from `Dev Requirement` and all comments.
 - `init` and `reinit` must not remove maintainer text.
@@ -123,7 +123,7 @@ Rules:
 
 ## Modes
 
-OpenClaw or Dev may trigger the agent with one of these modes.
+Dev or another trusted coordinator may trigger the agent with one of these modes.
 
 - `init`: fetch full issue details and all comments, ensure labels, inspect relevant docs, create or refresh the structured issue body, prepare branch/worktree when useful, and do not edit implementation files.
 - `reinit`: fetch full issue details and all comments, ensure labels, refresh the derived sections from `Dev Requirement` and comments, and do not code unless explicitly asked.
@@ -140,11 +140,11 @@ Keep GitHub visible as the durable work log.
 
 Use concise comments for:
 
-- `in progress`: Codex has picked up the issue and states the branch/session context.
-- `blocked`: Codex cannot continue without clarification, access, failing dependency, or a decision.
+- `in progress`: the agent has picked up the issue and states the branch/session context.
+- `blocked`: the agent cannot continue without clarification, access, failing dependency, or a decision.
 - `ready for review`: implementation and validation are complete enough for maintainer review.
 
-Do not send large implementation details only to OpenClaw.
+Do not send large implementation details only to chat or an external coordinator.
 Write durable status to GitHub so the maintainer can review remotely.
 In pair-work mode, also respond to Dev in chat with the same status, branch/worktree path, validation result, and next action.
 
@@ -154,17 +154,21 @@ Every mode must inspect current labels and ensure workflow labels are correct be
 
 When labels are available, keep these aligned:
 
-- always keep `codex` on Codex-assisted issues
-- keep `co-op` for human-led collaborative work
+- always keep `agent` on agent-assisted issues
+- optionally keep a runtime label such as `codex` or `claudecode` when the repository uses runtime-specific labels
+- default to `agent-only` for agent-assisted issues
+- use `co-op` only when Dev explicitly requests collaborative pair work
+- keep `agent-only` and `co-op` mutually exclusive
 - use exactly one current state label: `in-progress`, `blocked`, or `ready-for-review`
 
 Recommended mode-to-label behavior:
 
-- `init`: add `codex` and `co-op`; do not add a state label unless the run starts active work that needs tracking.
-- `reinit`: add `codex` and `co-op`; preserve the current state label unless the issue becomes blocked.
-- `plan`: add `codex`, `co-op`, and `in-progress`; remove `blocked` and `ready-for-review`.
-- `code`: add `codex`, `co-op`, and `in-progress`; remove `blocked` and `ready-for-review`.
-- `merge`: add `codex` and `co-op`; keep or set the state based on merge readiness.
+- `init`: add `agent` and `agent-only`; remove `co-op`; do not add a state label unless the run starts active work that needs tracking.
+- `reinit`: add `agent` and `agent-only`; remove `co-op`; preserve the current state label unless the issue becomes blocked.
+- `plan`: add `agent`, `agent-only`, and `in-progress`; remove `co-op`, `blocked`, and `ready-for-review`.
+- `code`: add `agent`, `agent-only`, and `in-progress`; remove `co-op`, `blocked`, and `ready-for-review`.
+- `merge`: add `agent` and `agent-only`; remove `co-op`; keep or set the state based on merge readiness.
+- explicit co-op request: add `agent` and `co-op`; remove `agent-only`; then apply the requested state label.
 - blocked in any mode: add `blocked`; remove `in-progress` and `ready-for-review`.
 - ready for review: add `ready-for-review`; remove `in-progress` and `blocked`.
 
@@ -173,10 +177,11 @@ If label operations fail, continue and mention the failure in the issue status c
 Preferred commands:
 
 ```bash
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue edit <issue-number> --add-label codex --add-label co-op
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue edit <issue-number> --add-label in-progress --remove-label blocked --remove-label ready-for-review
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue edit <issue-number> --add-label blocked --remove-label in-progress --remove-label ready-for-review
-./.agents/scripts/with-github-app.sh codex-coder -- gh issue edit <issue-number> --add-label ready-for-review --remove-label in-progress --remove-label blocked
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue edit <issue-number> --add-label agent --add-label agent-only --remove-label co-op
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue edit <issue-number> --add-label in-progress --remove-label blocked --remove-label ready-for-review
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue edit <issue-number> --add-label blocked --remove-label in-progress --remove-label ready-for-review
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue edit <issue-number> --add-label ready-for-review --remove-label in-progress --remove-label blocked
+./.agents/scripts/with-github-app.sh <agent-slug> -- gh issue edit <issue-number> --add-label co-op --remove-label agent-only
 ```
 
 If a label does not exist, create it when the repository permissions allow it, or report the missing label as setup work.
@@ -195,14 +200,14 @@ git worktree add worktrees/<branch-name> <branch-name>
 ```
 
 Work inside `worktrees/<branch-name>` for issue implementation.
-Commit and push before ending every implementation chat so Dev or OpenClaw can review progress remotely.
+Commit and push before ending every implementation chat so Dev can review progress remotely.
 
 Do not use PR numbers as work item ids.
 The issue number remains the canonical id.
 
 ## Pair-Work Mode
 
-Pair-work mode runs the same issue modes and GitHub workflow, but Dev directly coordinates the agent in chat instead of OpenClaw.
+Pair-work mode runs the same issue modes and GitHub workflow, with Dev directly coordinating the agent in chat.
 
 In pair-work mode:
 

@@ -18,7 +18,7 @@ Use lowercase kebab-case names.
 ## Scope Prefixes
 
 - `common-`: repository-wide workflow skills
-- `agent-`: OpenClaw/Codex coordination skills
+- `agent-`: local agent coordination skills
 - `frontend-`: frontend delivery and design skills
 - `web-`: web app architecture and implementation skills
 - `backend-`: backend delivery and architecture skills
@@ -50,4 +50,3 @@ Then include:
 - Prefer short checklists over long essays.
 - Avoid duplicating root `AGENTS.md` unless the skill needs an exact workflow rule.
 - Update `AGENTS.md` if adding a new stable naming convention.
-
