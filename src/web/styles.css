@@ -1,0 +1,154 @@
+:root {
+  color-scheme: light;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #122033;
+  background:
+    radial-gradient(circle at top left, rgba(255, 230, 188, 0.92), transparent 38%),
+    linear-gradient(135deg, #f9f6ef 0%, #eef3f8 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 32px;
+  display: grid;
+  gap: 20px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.hero,
+.panel {
+  border: 1px solid rgba(18, 32, 51, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 16px 40px rgba(18, 32, 51, 0.08);
+}
+
+.hero {
+  border-radius: 20px;
+  padding: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+}
+
+.hero h1,
+.panel h2 {
+  margin: 0;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.76rem;
+  color: #4f647d;
+}
+
+.lede,
+.panel p {
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+.button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: #122033;
+  color: #fff;
+  cursor: pointer;
+}
+
+.panel {
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.panel-error {
+  border-color: rgba(182, 61, 61, 0.28);
+}
+
+.panel-empty {
+  border-color: rgba(79, 100, 125, 0.24);
+}
+
+.summary-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metric,
+.forecast-card {
+  border-radius: 14px;
+  background: rgba(246, 248, 250, 0.92);
+  border: 1px solid rgba(18, 32, 51, 0.08);
+  padding: 16px;
+}
+
+.metric span,
+.forecast-date {
+  display: block;
+  font-size: 0.8rem;
+  color: #5c6d7f;
+}
+
+.metric strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+.forecast-list {
+  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.forecast-card h2 {
+  margin-top: 8px;
+  font-size: 1.15rem;
+}
+
+.forecast-temp {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .hero {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
